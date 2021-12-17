@@ -19,19 +19,20 @@ export default function App() {
         theme={navTheme}
       >
         <Stack.Navigator
-          initialRouteName="Patients"
+          initialRouteName="PatientCard"
           screenOptions={{
             headerTintColor: '#2A86FF',
-            headerShadowVisible: false,
           }}
         >
           <Stack.Screen
             name="Patients"
             component={HomeScreen}
+            options={{ title: 'Patients' }}
           />
           <Stack.Screen
-            name="Patient card"
+            name="PatientCard"
             component={PatientDetailsScreen}
+            options={{ title: 'Patient card' }}
           />
         </Stack.Navigator>
       </NavigationContainer>
