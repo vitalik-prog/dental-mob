@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import { SectionList } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import axios from 'axios'
 import styled from 'styled-components/native'
 import { Appointment, SectionTitle } from '../components'
 
@@ -15,6 +16,7 @@ const DATA = [
         active: true,
         diagnosis: 'some illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name1',
           avatar: 'https://image.freepik.com/free-vector/bearded-man-avatar-man-vector-portrait_9385-36.jpg'
         }
@@ -24,6 +26,7 @@ const DATA = [
         time: '13:00',
         diagnosis: 'another illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name2',
           avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCcemOrw8mSjbGRWPILUjf-J-VArHi54RO7A&usqp=CAU'
         }
@@ -39,6 +42,7 @@ const DATA = [
         active: true,
         diagnosis: 'some illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name1',
           avatar: 'https://image.freepik.com/free-vector/bearded-man-avatar-man-vector-portrait_9385-36.jpg'
         }
@@ -48,6 +52,7 @@ const DATA = [
         time: '13:00',
         diagnosis: 'another illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name2',
           avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCcemOrw8mSjbGRWPILUjf-J-VArHi54RO7A&usqp=CAU'
         }
@@ -63,6 +68,7 @@ const DATA = [
         active: true,
         diagnosis: 'some illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name1',
           avatar: 'https://image.freepik.com/free-vector/bearded-man-avatar-man-vector-portrait_9385-36.jpg'
         }
@@ -72,6 +78,7 @@ const DATA = [
         time: '13:00',
         diagnosis: 'another illness!!!',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name2',
           avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCcemOrw8mSjbGRWPILUjf-J-VArHi54RO7A&usqp=CAU'
         }
@@ -87,6 +94,7 @@ const DATA = [
         active: true,
         diagnosis: 'some illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name1',
           avatar: 'https://image.freepik.com/free-vector/bearded-man-avatar-man-vector-portrait_9385-36.jpg'
         }
@@ -96,6 +104,7 @@ const DATA = [
         time: '13:00',
         diagnosis: 'another illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name2',
           avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCcemOrw8mSjbGRWPILUjf-J-VArHi54RO7A&usqp=CAU'
         }
@@ -111,6 +120,7 @@ const DATA = [
         active: true,
         diagnosis: 'some illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name1',
           avatar: 'https://image.freepik.com/free-vector/bearded-man-avatar-man-vector-portrait_9385-36.jpg'
         }
@@ -120,6 +130,7 @@ const DATA = [
         time: '13:00',
         diagnosis: 'another illness',
         user: {
+          phone: '+7 (999) 111-23-33',
           fullname: 'patient name2',
           avatar: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRCcemOrw8mSjbGRWPILUjf-J-VArHi54RO7A&usqp=CAU'
         }
@@ -130,24 +141,22 @@ const DATA = [
 
 const HomeScreen = () => {
   const navigation = useNavigation();
+  const [data, setData] = useState(null)
 
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     title: 'Patients',
-  //     headerTintColor: '#2A86FF',
-  //     headerStyle: {
-  //       elevation: 1,
-  //       shadowOpacity: 0
-  //     }
-  //   });
-  // }, [navigation]);
+  useEffect(() => {
+    axios.get('').then(({ data }) => setData(data))
+  }, [])
+
+  const navigateToPatientDetails = (item) => {
+    navigation.navigate('PatientCard', {item})
+  }
 
   return (
     <Container>
       <SectionList
         sections={DATA}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <Appointment {...item} />}
+        renderItem={({ item }) => <Appointment navigateToDetails={() => navigateToPatientDetails(item)} item={item} />}
         renderSectionHeader={({ section: { title } }) => (
           <SectionTitle title={title} />
         )}
