@@ -2,6 +2,8 @@ node_modules/
 .idea
 .expo/
 dist/
+/backend/node_modules/
+/backend/idea
 npm-debug.*
 *.jks
 *.p8
