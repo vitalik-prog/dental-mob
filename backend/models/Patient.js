@@ -1,7 +1,6 @@
 const mongoose = require('mongoose')
 
 const PatientSchema = new mongoose.Schema({
-  id: String,
   fullname: String,
   phone: String
 }, {
