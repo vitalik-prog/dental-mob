@@ -16,5 +16,6 @@ app.post('/patients', patientValidation.create, PatientController.create)
 
 app.get('/appointments', AppointmentController.all)
 app.post('/appointments', appointmentValidation.create, AppointmentController.create)
+app.delete('/appointments/:id', AppointmentController.deleteAppointment)
 
 app.listen(6666, () => 'Server started...')

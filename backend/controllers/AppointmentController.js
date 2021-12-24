@@ -1,27 +1,28 @@
-const { validationResult } = require('express-validator')
-const { Appointment } = require('../models')
+const {validationResult} = require('express-validator')
+const {Appointment, Patient} = require('../models')
 
-function AppointmentController() {}
+function AppointmentController() {
+}
 
 const all = function (req, res) {
   Appointment.find({})
     .populate('patient')
     .exec(function (err, docs) {
-    if (err) {
-      return res.status(500).json({
-        success: false,
-        message: err
-      })
-    }
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: err
+        })
+      }
 
-    res.status(200).json({
-      success: true,
-      data: docs
+      res.status(200).json({
+        success: true,
+        data: docs
+      })
     })
-  })
 }
 
-const create = function (req, res) {
+const create = async function (req, res) {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     return res.status(422).json({
@@ -39,6 +40,15 @@ const create = function (req, res) {
     time: req.body.time,
   }
 
+  try {
+    await Patient.findOne({_id: data.patient})
+  } catch (e) {
+    return res.status(404).json({
+      success: false,
+      message: "Patient not found"
+    })
+  }
+
   Appointment.create(data, function (err, doc) {
     if (err) {
       return res.status(500).json({
@@ -54,9 +64,36 @@ const create = function (req, res) {
   })
 }
 
+const deleteAppointment = async function (req, res) {
+  const id = req.params.id
+
+  try {
+    await Appointment.findOne({_id: id})
+  } catch (e) {
+    return res.status(404).json({
+      success: false,
+      message: 'Appointment not found'
+    })
+  }
+
+  await Appointment.deleteOne({_id: id}, err => {
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: err
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+    })
+  })
+}
+
 AppointmentController.prototype = {
   all,
-  create
+  create,
+  deleteAppointment
 }
 
 module.exports = AppointmentController
