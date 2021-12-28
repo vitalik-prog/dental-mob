@@ -64,7 +64,47 @@ const create = async function (req, res) {
   })
 }
 
-const deleteAppointment = async function (req, res) {
+const update = async function (req, res) {
+  const appointmentId = req.params.id
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(422).json({
+      success: false,
+      message: errors.array()
+    })
+  }
+
+  const data = {
+    dentNumber: req.body.dentNumber,
+    diagnosis: req.body.diagnosis,
+    price: req.body.price,
+    date: req.body.date,
+    time: req.body.time,
+  }
+
+  Appointment.updateOne({ _id: appointmentId }, { $set: data }, function (err, doc) {
+    if (!doc) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found"
+      })
+    }
+
+    if (err) {
+      return res.status(500).json({
+        success: false,
+        message: err
+      })
+    }
+
+    res.status(200).json({
+      success: true,
+      data: doc
+    })
+  })
+}
+
+const remove = async function (req, res) {
   const id = req.params.id
 
   try {
@@ -93,7 +133,8 @@ const deleteAppointment = async function (req, res) {
 AppointmentController.prototype = {
   all,
   create,
-  deleteAppointment
+  remove,
+  update
 }
 
 module.exports = AppointmentController
