@@ -115,7 +115,7 @@ const remove = async function (req, res) {
 const getOne = async function (req, res) {
   const id = req.params.id
   try {
-    const patient = await Patient.findById(id).exec()
+    const patient = await Patient.findById(id).populate('Appointments').exec()
     if (!patient) {
       return res.status(404).json({
         success: false,
@@ -125,7 +125,10 @@ const getOne = async function (req, res) {
 
     res.status(200).json({
       success: true,
-      data: patient
+      data: {
+        ...patient._doc,
+        appointments: patient.Appointments
+      }
     })
   } catch (err) {
     return res.status(500).json({

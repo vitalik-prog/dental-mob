@@ -1,3 +1,5 @@
+const axios = require ("axios");
+const dateFns = require('date-fns')
 const {validationResult} = require('express-validator')
 const {Appointment, Patient} = require('../models')
 
@@ -40,8 +42,9 @@ const create = async function (req, res) {
     time: req.body.time,
   }
 
+  let patient;
   try {
-    await Patient.findOne({_id: data.patient})
+    patient = await Patient.findOne({_id: data.patient})
   } catch (e) {
     return res.status(404).json({
       success: false,
@@ -56,6 +59,28 @@ const create = async function (req, res) {
         message: err
       })
     }
+
+    const year = data.date.split('-')[2]
+    const month = data.date.split('-')[1]
+    const day = data.date.split('-')[0]
+    const hours = data.time.split(':')[0]
+    const minutes = data.time.split(':')[1]
+    const sendingTime = new Date(year, month - 1, day, hours, minutes).getTime()
+    const postponedTimeTwoHours = 3600000 * 2
+
+    const phoneNumber = patient.phone.replace(/[^0-9]/g,"")
+    const appointmentTime = data.date + `+` + data.time
+    const formattedSendingTime = dateFns.format(new Date(sendingTime - postponedTimeTwoHours), 'yyyy-MM-dd HH:mm:00')
+
+    // Time format to postpone sms - 2021-12-31 15:34:55
+    // ----- Commented to prevent balance reduce -----
+    // axios.get(`https://api.mobizon.ua/service/message/sendsmsmessage?recipient=${phoneNumber}&text=You+have+an+appointment+${appointmentTime}&params[name]=blabla&params[deferredToTs]=${formattedSendingTime}&apiKey=${process.env.SMS_API_KEY}`)
+    //   .then(function (response) {
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   })
 
     res.status(201).json({
       success: true,
