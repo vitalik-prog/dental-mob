@@ -1,7 +1,8 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import {HomeScreen, PatientDetailsScreen} from "./screens";
+import { LogBox } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 const navTheme = {
@@ -13,6 +14,9 @@ const navTheme = {
 };
 
 export default function App() {
+  useEffect(() => {
+    LogBox.ignoreLogs(['Animated: `useNativeDriver`']);
+  }, [])
 
   return (
       <NavigationContainer

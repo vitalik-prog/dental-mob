@@ -1,8 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import { SectionList } from 'react-native'
+import { SectionList, Text } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios'
+import Swipeable from 'react-native-swipeable-row';
 import styled from 'styled-components/native'
 import { Appointment, SectionTitle } from '../components'
 
@@ -144,7 +145,7 @@ const HomeScreen = () => {
   const [data, setData] = useState(null)
 
   useEffect(() => {
-    axios.get('').then(({ data }) => setData(data))
+    axios.get('').then(({ data }) => setData(data)).catch(e => console.log(e))
   }, [])
 
   const navigateToPatientDetails = (item) => {
@@ -156,7 +157,11 @@ const HomeScreen = () => {
       <SectionList
         sections={DATA}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => <Appointment navigateToDetails={() => navigateToPatientDetails(item)} item={item} />}
+        renderItem={({item}) =>
+          <Swipeable rightButtons={[<Text>left</Text>, <Text>right</Text>]}>
+            <Appointment navigateToDetails={() => navigateToPatientDetails(item)} item={item}/>
+          </Swipeable>
+        }
         renderSectionHeader={({ section: { title } }) => (
           <SectionTitle title={title} />
         )}
