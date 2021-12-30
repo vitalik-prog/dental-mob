@@ -19,7 +19,7 @@ export default function App() {
         theme={navTheme}
       >
         <Stack.Navigator
-          initialRouteName="PatientCard"
+          initialRouteName="Patients"
           screenOptions={{
             headerTintColor: '#2A86FF',
           }}
