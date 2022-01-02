@@ -1,5 +1,5 @@
 const axios = require ("axios");
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 const dateFns = require('date-fns')
 const {validationResult} = require('express-validator')
 const {Appointment, Patient} = require('../models')
@@ -10,23 +10,30 @@ function AppointmentController() {
 const all = async function (req, res) {
   await Appointment
     .aggregate([
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patient",
+          foreignField: "_id",
+          as: "patient"
+        }
+      },
       { $group: {
         _id: "$date",
           data: { $push: {
             id: "$_id",
-            patientId: "$patient",
-            //patient: await Patient.findOne({ _id: mongoose.Types.ObjectId( "$patient" ) }),
-            patient: { $in: [ "patient" ] },
+            patientId: { $first: "$patient._id" },
+            patient: { $first: "$patient" },
             dentNumber: "$dentNumber",
-              diagnosis: "$diagnosis",
+            diagnosis: "$diagnosis",
             price: "$price",
-              date: "$date",
-              time: "$time"
-          } }
+            date: "$date",
+            time: "$time"
+          } },
       } },
       { $sort: { _id: 1 } },
     ])
-    .exec(function (err, docs) {
+    .exec(async function (err, docs) {
       if (err) {
         return res.status(500).json({
           success: false,
