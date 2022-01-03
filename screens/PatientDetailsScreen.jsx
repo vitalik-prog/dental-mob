@@ -1,20 +1,19 @@
 import React from 'react';
 import styled from 'styled-components/native'
 import {Foundation, Ionicons, Feather} from '@expo/vector-icons';
-import {useRoute} from '@react-navigation/native';
-import {Button, GrayText, Badge} from "../components";
-import {Text} from "react-native";
+import { useRoute } from '@react-navigation/native';
+import { Button, GrayText, Badge } from "../components";
 
 const PatientDetailsScreen = () => {
-  //const { params: { item } } = useRoute();
+  const { params: { item } } = useRoute();
 
   return (
     <Container>
       <PatientDetails>
         <PatientFullName>
-          {"default"}
+          {item.patient.fullname}
         </PatientFullName>
-        <GrayText>{"default"}</GrayText>
+        <GrayText>{item.patient.phone}</GrayText>
         <PatientButtons>
           <FormulaView><Button>Dental formula</Button></FormulaView>
           <PhoneView>
