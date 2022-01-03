@@ -10,20 +10,31 @@ import { appointmentsApi } from '../api/index'
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [data, setData] = useState(null)
+  const [isLoading, setIsLoading] = useState(false)
 
-  useEffect(() => {
-    appointmentsApi.get().then(({ data }) =>  setData(data.data)).catch(e => console.log(e))
-  }, [])
+  const fetchAppointments = () => {
+    setIsLoading(true)
+    appointmentsApi.get().then(({ data }) =>  {
+      setData(data.data)
+      setIsLoading(false)
+    }).catch(e => {
+      console.log(e)
+      setIsLoading(false)
+    })
+  }
+
+  useEffect(fetchAppointments, [])
 
   const navigateToPatientDetails = (item) => {
     navigation.navigate('PatientCard', {item})
   }
-// console.log(DATA)
-// console.log(data)
+
   return (
     <Container>
       <SectionList
         sections={data}
+        onRefresh={fetchAppointments}
+        refreshing={isLoading}
         keyExtractor={(item) => item.id}
         renderItem={({item}) =>
           <Swipeable rightButtons={[<Text>left</Text>, <Text>right</Text>]}>
