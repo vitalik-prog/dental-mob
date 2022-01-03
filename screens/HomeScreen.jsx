@@ -6,10 +6,11 @@ import axios from 'axios'
 import Swipeable from 'react-native-swipeable-row';
 import styled from 'styled-components/native'
 import { Appointment, SectionTitle } from '../components'
+import { appointmentsApi } from '../api/index'
 
 const DATA = [
   {
-    title: "11 september",
+    _id: "11 september",
     data: [
       {
         id: 1,
@@ -35,7 +36,7 @@ const DATA = [
     ]
   },
   {
-    title: "12 september",
+    _id: "12 september",
     data: [
       {
         id: 3,
@@ -61,7 +62,7 @@ const DATA = [
     ]
   },
   {
-    title: "13 september",
+    _id: "13 september",
     data: [
       {
         id: 5,
@@ -87,7 +88,7 @@ const DATA = [
     ]
   },
   {
-    title: "14 september",
+    _id: "14 september",
     data: [
       {
         id: 7,
@@ -113,7 +114,7 @@ const DATA = [
     ]
   },
   {
-    title: "15 september",
+    _id: "15 september",
     data: [
       {
         id: 9,
@@ -145,25 +146,26 @@ const HomeScreen = () => {
   const [data, setData] = useState(null)
 
   useEffect(() => {
-    axios.get('').then(({ data }) => setData(data)).catch(e => console.log(e))
+    appointmentsApi.get().then(({ data }) =>  setData(data.data)).catch(e => console.log(e))
   }, [])
 
   const navigateToPatientDetails = (item) => {
     navigation.navigate('PatientCard', {item})
   }
-
+// console.log(DATA)
+// console.log(data)
   return (
     <Container>
       <SectionList
-        sections={DATA}
+        sections={data}
         keyExtractor={(item) => item.id}
         renderItem={({item}) =>
           <Swipeable rightButtons={[<Text>left</Text>, <Text>right</Text>]}>
             <Appointment navigateToDetails={() => navigateToPatientDetails(item)} item={item}/>
           </Swipeable>
         }
-        renderSectionHeader={({ section: { title } }) => (
-          <SectionTitle title={title} />
+        renderSectionHeader={({ section: { _id } }) => (
+          <SectionTitle title={_id} />
         )}
       />
       <PlusButton>
