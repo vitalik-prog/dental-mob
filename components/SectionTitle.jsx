@@ -1,10 +1,13 @@
 import React from 'react';
 import styled from 'styled-components/native'
+import {getTitle} from "../utils/getTitle";
 
 export const SectionTitle = ({ title }) => {
+  const parsedDate = title.split('-')
+  const date = getTitle(parsedDate[0], parsedDate[1]);
   return (
       <GroupTitle>
-        {title}
+        {date}
       </GroupTitle>
   );
 }

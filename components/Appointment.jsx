@@ -3,15 +3,19 @@ import {View} from 'react-native';
 import styled from 'styled-components/native'
 import GrayText from "./GrayText";
 import Badge from "./Badge";
+import GetAvatarColor from '../utils/getAvatarColor'
+import getAvatarColor from "../utils/getAvatarColor";
 
 const Appointment = ({navigateToDetails, item }) => {
-
-  const { user, diagnosis, active, time } = item
+  const { patient, diagnosis, active, time } = item;
+  const avatarColors = getAvatarColor(patient.fullname[0].toUpperCase())
   return (
     <GroupItem onPress={navigateToDetails}>
-      <Avatar source={{uri: user.avatar}}/>
+      <Avatar style={{ backgroundColor: avatarColors.background }}>
+        <Letter style={{ color: avatarColors.color }}>{patient.fullname[0].toUpperCase()}</Letter>
+      </Avatar>
       <View style={{flex: 1}}>
-        <FullName>{user.fullname}</FullName>
+        <FullName>{patient.fullname}</FullName>
         <GrayText>{diagnosis}</GrayText>
       </View>
       <Badge active={active}>{time}</Badge>
@@ -26,11 +30,18 @@ const FullName = styled.Text`
   font-size: 16px;
 `
 
-const Avatar = styled.Image`
+const Avatar = styled.View`
+  align-items: center;
+  justify-content: center;
   border-radius: 50px;
   width: 40px;
   height: 40px;
   margin-right: 15px;
+`
+
+const Letter = styled.Text`
+  font-size: 20px;
+  font-weight: bold;
 `
 
 const GroupItem = styled.TouchableOpacity`
