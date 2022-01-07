@@ -45,7 +45,7 @@ const HomeScreen = () => {
           <SectionTitle title={_id} />
         )}
       />
-      <PlusButton>
+      <PlusButton onPress={() => navigation.navigate('AddPatient')}>
         <Ionicons name={'ios-add'} size={36} color={'white'} />
       </PlusButton>
     </Container>

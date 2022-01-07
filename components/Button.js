@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components/native'
 
-const Button = ({children, color}) => {
+const Button = ({children, color, onPress}) => {
   return (
-      <TouchableWrapper color={color}>
+      <TouchableWrapper onPress={onPress} color={color}>
         <ButtonText>
           {children}
         </ButtonText>
