@@ -17,9 +17,9 @@ const AddPatientScreen = () => {
   }
 
   const handleSubmit = () => {
-    patientsApi.add(values)
-      .then(() => navigation.navigate('Patients'))
-      .catch(e => alert(e.message))
+  patientsApi.add(values)
+    .then(() => navigation.navigate('Patients'))
+    .catch(e => alert(JSON.stringify(e.response.data.message)))
   }
 
   return (
