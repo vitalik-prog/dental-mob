@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
-import {HomeScreen, PatientDetailsScreen} from "./screens";
+import {HomeScreen, PatientDetailsScreen, AddPatientScreen} from "./screens";
 import { LogBox } from 'react-native';
 
 const Stack = createNativeStackNavigator();
@@ -37,6 +37,11 @@ export default function App() {
             name="PatientCard"
             component={PatientDetailsScreen}
             options={{ title: 'Patient card' }}
+          />
+          <Stack.Screen
+            name="AddPatient"
+            component={AddPatientScreen}
+            options={{ title: 'Add patient' }}
           />
         </Stack.Navigator>
       </NavigationContainer>
