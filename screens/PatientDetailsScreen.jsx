@@ -1,11 +1,24 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
+import {ActivityIndicator, Linking} from "react-native";
 import styled from 'styled-components/native'
 import {Foundation, Ionicons, Feather} from '@expo/vector-icons';
 import { useRoute } from '@react-navigation/native';
 import { Button, GrayText, Badge } from "../components";
+import {patientsApi} from "../api";
 
 const PatientDetailsScreen = () => {
   const { params: { item } } = useRoute();
+  const [appointments, setAppointments] = useState([])
+  const [isLoading, setIsLoading] = useState(false)
+
+  useEffect(() => {
+    setIsLoading(true)
+    patientsApi.allAppointmentsByPatientId(item.patientId)
+      .then(({ data }) => {
+        setAppointments(data.data.appointments)
+        setIsLoading(false)
+      })
+  }, [])
 
   return (
     <Container>
@@ -17,36 +30,39 @@ const PatientDetailsScreen = () => {
         <PatientButtons>
           <FormulaView><Button>Dental formula</Button></FormulaView>
           <PhoneView>
-            <Button color={'#84D269'}>
+            <Button onPress={() => Linking.openURL('tel:' + item.patient.phone)} color={'#84D269'}>
               <Foundation name={'telephone'} size={22} color={'white'}/>
             </Button>
           </PhoneView>
         </PatientButtons>
       </PatientDetails>
       <PatientAppointments>
-        <AppointmentCard>
-          <MoreButton>
-            <Feather name="more-vertical" size={24} color="gray" />
-          </MoreButton>
-          <AppointmentCardRow>
-            <Ionicons name={'md-medical'} size={16} color={'#A3A3A3'}/>
-            <AppointmentCardLabel>
-              Tooth: <AppointmentCardLabelNumber>12</AppointmentCardLabelNumber>
-            </AppointmentCardLabel>
-          </AppointmentCardRow>
-          <AppointmentCardRow>
-            <Foundation name={'clipboard-notes'} size={16} color={'#A3A3A3'}/>
-            <AppointmentCardLabel>
-              Diagnosis: <AppointmentCardLabelNumber>some diagnosis</AppointmentCardLabelNumber>
-            </AppointmentCardLabel>
-          </AppointmentCardRow>
-          <AppointmentCardRow style={{ justifyContent: 'space-between', marginTop: 15 }}>
-            <Badge active style={{ width: 160 }}>
-              11.10.2019 - 15:40
-            </Badge>
-            <Badge color={'green'}>1500 P</Badge>
-          </AppointmentCardRow>
-        </AppointmentCard>
+        {isLoading ? <ActivityIndicator color='#2A86FF' size="large" /> :
+        appointments.map(appointment =>
+          <AppointmentCard key={appointment._id}>
+            <MoreButton>
+              <Feather name="more-vertical" size={24} color="gray" />
+            </MoreButton>
+            <AppointmentCardRow>
+              <Ionicons name={'md-medical'} size={16} color={'#A3A3A3'}/>
+              <AppointmentCardLabel>
+                Tooth: <AppointmentCardLabelNumber>{appointment.dentNumber}</AppointmentCardLabelNumber>
+              </AppointmentCardLabel>
+            </AppointmentCardRow>
+            <AppointmentCardRow>
+              <Foundation name={'clipboard-notes'} size={16} color={'#A3A3A3'}/>
+              <AppointmentCardLabel>
+                Diagnosis: <AppointmentCardLabelNumber>{appointment.diagnosis}</AppointmentCardLabelNumber>
+              </AppointmentCardLabel>
+            </AppointmentCardRow>
+            <AppointmentCardRow style={{ justifyContent: 'space-between', marginTop: 15 }}>
+              <Badge active style={{ width: 160 }}>
+                {appointment.date} - {appointment.time}
+              </Badge>
+              <Badge color={'green'}>{appointment.price} P</Badge>
+            </AppointmentCardRow>
+          </AppointmentCard>
+        )}
       </PatientAppointments>
     </Container>
   );
@@ -54,7 +70,7 @@ const PatientDetailsScreen = () => {
 
 export default PatientDetailsScreen;
 
-const Container = styled.View`
+const Container = styled.ScrollView`
   flex: 1;
 `
 
@@ -98,6 +114,7 @@ const AppointmentCard = styled.View`
   border-radius: 10px;
   background: white;
   margin: 0 20px;
+  margin-bottom: 20px;
 `
 
 const AppointmentCardRow = styled.View`
