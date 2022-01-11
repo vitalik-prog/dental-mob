@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import styled from 'styled-components/native'
-import {Input, Center, NativeBaseProvider, FormControl, Stack} from "native-base"
+import {Input, Center, NativeBaseProvider, FormControl} from "native-base"
 import { Button, GrayText, Badge } from "../components";
 import {patientsApi} from "../api";
 import {useNavigation} from "@react-navigation/native";
